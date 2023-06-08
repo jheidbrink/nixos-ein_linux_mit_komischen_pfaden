@@ -68,7 +68,18 @@ $ cat /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
 $ /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
 ```
 
-# Exkurs: nix-shell
+# Die komischen Pfade
+
+```
+$ nix-store --query --graph /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip > myip-dependencies.dot
+$ dot -Tpng myip-dependencies.dot > myip-dependencies.png
+```
+![myip dependency graph](myip-dependencies.png)
+- Die **Hashes im Store Path** sind nicht content-addressed, sondern **input-addressed**
+  - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
+  - die Hashes steht schon fest bevor das Paket gebaut wird
+
+# nix-shell
 
 ```
 $ cat shell.nix
@@ -109,17 +120,6 @@ myip not found
 $ which pandoc
 pandoc not found
 ```
-
-# Die komischen Pfade
-
-```
-$ nix-store --query --graph /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip > myip-dependencies.dot
-dot -Tpng myip-dependencies.dot > myip-dependencies.png
-```
-![myip dependency graph](myip-dependencies.png)
-- Die Hashes im Store Path sind nicht content-addressed, sondern input-addressed
-  - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
-  - die Hashes steht schon fest bevor das Paket gebaut wird
 
 # Ein echtes Beispielpaket: bazel-remote
 [Link to source](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/build-managers/bazel/bazel-remote/default.nix)
