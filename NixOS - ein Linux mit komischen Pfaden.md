@@ -1,35 +1,26 @@
----
-title:
-- NixOS - ein Linux mit komischen Pfaden
-author:
-- Jan Heidbrink
-theme:
-- Copenhagen
-date:
-- 9. Juni 2023
-
----
-
 # Überblick
 
-- Nix ist ein Paketmanager und Buildsystem
+- **Nix** ist ein **Paketmanager und Buildsystem**
+  - Geschichte: Eelco Dolstra started Nix as a research project in 2003
+  PhD Thesis [The Purely Functional Software Deployment Model](https://edolstra.github.io/pubs/phd-thesis.pdf)
   - Features:
-      - Atomare Upgrades und Rollbacks
+      - Atomare Upgrades und Rollback
       - mehrere Versionen einer Software gleichzeitig installierbar
-      - Reproducable builds über exaktes Pinning der Dependencies
+      - *Reproducable builds* dank exaktem Pinning der Dependencies
+      - Quellbasiert, aber Artefakte werden zentral gecached
 - Nix ist eine Programmiersprache
   - Funktionale DSL für "Bauanleitungen für Software"
-- nixpkgs ist das Nix Paket Repository
-  - größtes existierendes Repository
+- [nixpkgs](https://github.com/NixOS/nixpkgs) definiert Pakete für Nix
+  - größtes existierende Sammlung an Paketen (laut [repology](https://repology.org/))
   - sehr viele Contributors
   - relativ aktuelle Pakete
-- NixOS nutzt Nix um das ganze Betriebssystem deklarativ und reproduzierbar aufzusetzen
+- **NixOS** nutzt Nix um das ganze Betriebssystem deklarativ und reproduzierbar aufzusetzen
 
-# Wie funktioniert das?
+# Wie funktionieren atomare Upgrades und Rollbacks?
 
 - Pakete haben keine Pre- und Post-Install Skripte
-
 - Pakete werden nicht nach /usr kopiert, sondern in den "Nix Store" (`/nix/store`)
+
 ```
 ~: ls -l /nix/store/ | head
 total 13G
@@ -40,20 +31,17 @@ dr-xr-xr-x     4 root    root   4,0K  1. Jan 1970  0008l9p6inwr416r70px34xjh46zj
 -r--r--r--     2 root    root   1,8K  1. Jan 1970  0009r9fh8s0j5c25vy2ihalc5yzgh4dn-cargo-check-hook.sh.drv
 -r--r--r--     2 root    root   4,2K  1. Jan 1970  000clnxd40qy0gyrlg9564l2ga0k26dg-gotags-20150803-be986a3.drv
 dr-xr-xr-x     4 root    root   4,0K  1. Jan 1970  000dvmibiid0vbmay4mdnd8iasqycbk1-libmicrodns-0.2.0
--r--r--r--     2 root    root   3,4K  1. Jan 1970  000iv8q3v5c9ipvq3jx2hvibnp9i9vma-source.drv
--r--r--r--     2 root    root   2,1K  1. Jan 1970  000svv6f2r2jgfj4ir3vllz45mnkwy2c-python3.10-pylint-2.14.5_fish-completions.drv
 ```
 
 - Nachteil: Häufig Sonderbehandlung nötig. Viele Programme suchen nach Abhängigkeiten in `/usr`
-
 - Binaries werden so gepatcht, daß sie ihre libraries nicht in `/usr/lib` suchen, sondern
   an den exakt spezifizierten Pfaden
-
 - Damit man in seiner Umgebung bestimmte Programme "sieht", wird die PATH Variable angepasst.
 
 
-# Pakete schreiben kann einfach sein
+# Wie funktionieren Reproducible Builds?
 
+- exaktes Pinning der Dependencies: 
 ```
 $ cat my-ip.nix
 { pkgs ? import <nixpkgs> {} }:
@@ -66,7 +54,7 @@ curl "https://httpbin.org/ip" | jq ".origin"
 
 $ nix-build my-ip.nix
 
-nix-build my-ip.nix                            [± master]
+nix-build my-ip.nix
 this derivation will be built:
   /nix/store/7wja9afxc5yzx02c67y93rg323rp7wjm-myip.drv
 building '/nix/store/7wja9afxc5yzx02c67y93rg323rp7wjm-myip.drv'...
@@ -95,6 +83,8 @@ pkgs.mkShell {
     pkgs.pandoc
     pkgs.texlive.combined.scheme-full
     myip
+    pkgs.python310.withPackages (p: [ p.requests p.numpy ])
+    pkgs.nodejs-18_x
   ];
 }
 ```
@@ -125,8 +115,8 @@ pandoc not found
 ```
 $ nix-store --query --graph /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip > myip-dependencies.dot
 dot -Tpng myip-dependencies.dot > myip-dependencies.png
-![myip dependency graph](myip-dependencies.png)
 ```
+![myip dependency graph](myip-dependencies.png)
 - Die Hashes im Store Path sind nicht content-addressed, sondern input-addressed
   - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
   - die Hashes steht schon fest bevor das Paket gebaut wird
@@ -163,7 +153,6 @@ buildGoModule rec {
   };
 }
 ```
-
 
 # nixpkgs
 
