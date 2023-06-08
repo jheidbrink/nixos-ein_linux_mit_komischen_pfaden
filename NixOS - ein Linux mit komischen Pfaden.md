@@ -60,12 +60,24 @@ this derivation will be built:
 building '/nix/store/7wja9afxc5yzx02c67y93rg323rp7wjm-myip.drv'...
 /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip
 
-$ tree /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
-/nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
+$ tree /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/
+/nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/
+└── bin
+    └── myip
 
 $ cat /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
+#!/nix/store/kga2r02rmyxl14sg96nxbdhifq3rb8lc-bash-5.1-p16/bin/bash
+export PATH=/nix/store/5wx14rp7g8lqc1r6jkkf1v8n8119l2mq-curl-7.86.0-bin/bin:/nix/store/5cnq0rszbf91vap4ii260rzidaidp83z-jq-1.6-bin/bin
+
+curl "https://httpbin.org/ip" | jq ".origin"
+
 
 $ /nix/store/bf04ly63z7lxd88mmsgmdd2qr89irjxj-myip/bin/myip
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    31    0    31    0     0      0      0 --:--:--  0:00:39 --:--:--     8
+"95.91.240.54"
+
 ```
 
 # Die komischen Pfade
