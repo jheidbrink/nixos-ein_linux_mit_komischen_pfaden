@@ -79,6 +79,8 @@ $ dot -Tpng myip-dependencies.dot > myip-dependencies.png
   - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
   - die Hashes steht schon fest bevor das Paket gebaut wird
 
+
+
 # nix-shell
 
 ```
@@ -121,6 +123,7 @@ $ which pandoc
 pandoc not found
 ```
 
+
 # Ein echtes Beispielpaket: bazel-remote
 [Link to source](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/build-managers/bazel/bazel-remote/default.nix)
 ```
@@ -158,7 +161,8 @@ buildGoModule rec {
 
 - Wenn Ihr irgendwo  auf `import <nixpkgs>` stößt, wird <nixpkgs> auf einen lokalen Checkout von https://github.com/NixOS/nixpkgs aufgelöst.
   - Anders als z.B. `apt` arbeitet der nix Paketmanager direkt mit dem Quellcode der Paketdefinitionen
-  - Die Pfade im Store dienen als Cache Key - gebaut wird nur was nicht aus dem Remote Store runtergeladen werden kann
+- nixpkgs enthält nicht nur sehr viele Paketdefinitionen, sondern auch sehr viele nützliche Hilfsfunktionen
+  - z.B. Python Pakete, Go Pakete, Docker Images, VM Images, VIM Plugins etc etc
 
 
 # NixOS
@@ -174,3 +178,43 @@ readlink /run/current-system
 ![example-bootscreen-screenshot](example-nixos-bootscreen.png)
 
 
+[Meine Laptop Config](https://github.com/jheidbrink/machines/blob/master/configuration-petrosilia.nix)
+```
+{
+  environment.systemPackages = [
+    pkgs.meld
+    pkgs.jetbrains.idea-ultimate
+    pkgs.pulseaudio  # this gives me pactl but doesn't run pulseaudio
+    pkgs.lxqt.lxqt-archiver
+    pkgs.pantheon.evince
+    pkgs.bazel-remote
+    pkgs.rustup
+    pkgs.bazel_5
+    pkgs.aptly
+    nixpkgs2305.teams
+    pkgs.bluetuith
+  ];
+
+  # Minimal configuration for NFS support with Vagrant. (from NixOS Wiki)
+  services.nfs.server.enable = true;
+  networking.firewall.extraCommands = ''
+    ip46tables -I INPUT 1 -i vboxnet+ -p tcp -m tcp --dport 2049 -j ACCEPT
+  '';
+  networking.firewall.allowedTCPPorts = [ 5678 ];
+
+  virtualisation.lxd.enable = true;
+
+  virtualisation.virtualbox.host.enable = true;  # Note that I had to reboot before I could actually use Virtualbox. Or maybe     virtualisation.virtualbox.host.addNetworkInterface would have helped?
+  users.extraGroups.vboxusers.members = [ "jan" "heidbrij" ];
+  environment.etc."vbox/networks.conf".text = ''
+    * 3001::/64
+    * 192.168.0.0/16
+  '';
+}
+```
+
+# Ressourcen
+
+- Eine gute Einführung in die Sprache: [Nix Pills](https://nixos.org/guides/nix-pills/)
+- Forum: https://discourse.nixos.org/
+- `#nixos` Channel im TNG Slack
