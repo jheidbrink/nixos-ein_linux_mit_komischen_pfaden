@@ -228,8 +228,10 @@ $ readlink /run/current-system
 }
 ```
 
-# Wie kann ich Nix sinnvoll einsetzen?
+# Wie kann ich Nix einsetzen?
 
+- als Paketmanager: `nix-env`
+- Umgebungen mit `nix-shell` basteln
 - Comma installiert Programme on the fly und fuehrt sie aus: https://github.com/nix-community/comma 
 - Umgebungen mit nix-shell basteln
 - Manage User Environments with Nix: https://github.com/nix-community/home-manager
