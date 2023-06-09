@@ -4,9 +4,9 @@
   - Geschichte: Eelco Dolstra started Nix as a research project in 2003
   PhD Thesis [The Purely Functional Software Deployment Model](https://edolstra.github.io/pubs/phd-thesis.pdf)
   - Features:
-      - Atomare Upgrades und Rollback
+      - Atomare Upgrades und Rollbacks
       - mehrere Versionen einer Software gleichzeitig installierbar
-      - *Reproducable builds* dank exaktem Pinning der Dependencies
+      - **Reproducable builds** (und reproducable installations) dank exaktem Pinning der Dependencies und Sandboxed Builds
       - Quellbasiert, aber Artefakte werden zentral gecached
 - Nix ist eine Programmiersprache
   - Funktionale DSL für "Bauanleitungen für Software"
@@ -19,7 +19,8 @@
 # Wie funktionieren atomare Upgrades und Rollbacks?
 
 - Pakete haben keine Pre- und Post-Install Skripte
-- Pakete werden nicht nach /usr kopiert, sondern in den "Nix Store" (`/nix/store`)
+- Pakete werden nicht nach /usr kopiert, sondern in isolierte Verzeichnisse im "Nix Store" (`/nix/store`)
+  - Pakete sind immutable
 
 ```
 ~: ls -l /nix/store/ | head
@@ -90,6 +91,8 @@ $ dot -Tpng myip-dependencies.dot > myip-dependencies.png
 - Die **Hashes im Store Path** sind nicht content-addressed, sondern **input-addressed**
   - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
   - die Hashes steht schon fest bevor das Paket gebaut wird
+  - die Store Paths koennen als Identifier eine exakte Software Version benutzt werden
+    - dabei ist Nix
 
 
 
@@ -183,7 +186,7 @@ buildGoModule rec {
   - damit bekommen wir atomare Upgrades und Rollbacks für das komplette System
 
 ```
-readlink /run/current-system
+$ readlink /run/current-system
 /nix/store/z8l66l5sw5lg5vack0w27rg5b654jfii-nixos-system-petrosilia-22.11.4484.d83945caa76
 ```
 
@@ -224,6 +227,13 @@ readlink /run/current-system
   '';
 }
 ```
+
+# Wie kann ich Nix sinnvoll einsetzen?
+
+- Comma installiert Programme on the fly und fuehrt sie aus: https://github.com/nix-community/comma 
+- Umgebungen mit nix-shell basteln
+- Manage User Environments with Nix: https://github.com/nix-community/home-manager
+- auf NixOS wechseln
 
 # Ressourcen
 
