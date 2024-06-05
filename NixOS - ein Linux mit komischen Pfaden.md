@@ -6,7 +6,7 @@
   - Features:
       - Atomare Upgrades und Rollbacks
       - mehrere Versionen einer Software gleichzeitig installierbar
-      - **Reproducable builds** (und reproducable installations) dank exaktem Pinning der Dependencies und Sandboxed Builds
+      - **Reproducable builds** (und **reproducable installations**) dank exaktem Pinning der Dependencies und Sandboxed Builds
       - Quellbasiert, aber Artefakte werden zentral gecached
 - Nix ist eine Programmiersprache
   - Funktionale DSL für "Bauanleitungen für Software"
