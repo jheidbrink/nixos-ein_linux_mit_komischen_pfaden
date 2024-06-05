@@ -14,7 +14,7 @@
   - größtes existierende Sammlung an Paketen (laut [repology](https://repology.org/))
   - sehr viele Contributors
   - relativ aktuelle Pakete
-- **NixOS** nutzt Nix um das ganze Betriebssystem deklarativ und reproduzierbar aufzusetzen
+- **NixOS** nutzt Nix um das ganze Betriebssystem deklaranixos-ein_linux_mit_komischen_pfadentiv und reproduzierbar aufzusetzen
 
 # Wie funktionieren atomare Upgrades und Rollbacks?
 
@@ -192,7 +192,7 @@ $ readlink /run/current-system
 ![example-bootscreen-screenshot](example-nixos-bootscreen.png)
 
 
-[Meine Laptop Config](https://github.com/jheidbrink/machines/blob/master/configuration-petrosilia.nix)
+Beispiel Config Ausschnitt:
 ```
 {
   environment.systemPackages = [
