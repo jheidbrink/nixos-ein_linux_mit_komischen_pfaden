@@ -18,7 +18,7 @@
 
 # Wie funktionieren atomare Upgrades und Rollbacks?
 
-- Pakete haben keine Pre- und Post-Install Skripte
+- Pakete haben keine Pre- und Post-Install Skripte. Das ist auch für Reproducible Installations wichtig.
 - Pakete werden nicht nach /usr kopiert, sondern in isolierte Verzeichnisse im "Nix Store" (`/nix/store`)
   - Pakete sind immutable
 
