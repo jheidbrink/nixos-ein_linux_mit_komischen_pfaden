@@ -182,7 +182,9 @@ buildGoModule rec {
 # NixOS
 
 - Verwendet Nix um nicht nur Pakete, sondern ganze Systemkonfigurationen zu bauen
-  - damit bekommen wir atomare Upgrades und Rollbacks für das komplette System
+  - damit bekommen wir Nix's Features für das ganze System:
+    - Reproducible builds
+    - Atomare Upgrades und Rollbacks
 
 ```
 $ readlink /run/current-system
