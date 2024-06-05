@@ -92,7 +92,6 @@ $ dot -Tpng myip-dependencies.dot > myip-dependencies.png
   - wenn sich der Hash einer Abhängigkeit ändert, ändert sich auch der eigene Hash
   - die Hashes steht schon fest bevor das Paket gebaut wird
   - die Store Paths koennen als Identifier eine exakte Software Version benutzt werden
-    - dabei ist Nix
 
 
 
