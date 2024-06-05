@@ -176,7 +176,7 @@ buildGoModule rec {
 - Wenn Ihr irgendwo  auf `import <nixpkgs>` stößt, wird <nixpkgs> auf einen lokalen Checkout von https://github.com/NixOS/nixpkgs aufgelöst.
   - Anders als z.B. `apt` arbeitet der nix Paketmanager direkt mit dem Quellcode der Paketdefinitionen
 - nixpkgs enthält nicht nur sehr viele Paketdefinitionen, sondern auch sehr viele nützliche Hilfsfunktionen
-  - z.B. Python Pakete, Go Pakete, Docker Images, VM Images, VIM Plugins etc etc
+  - z.B. Python Pakete, Go Pakete, Docker Images, VM Images, VIM Plugins, Nixos VM tests, etc
 
 
 # NixOS
